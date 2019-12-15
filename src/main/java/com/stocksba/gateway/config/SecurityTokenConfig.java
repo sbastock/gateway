@@ -50,6 +50,8 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 		   .antMatchers(HttpMethod.GET, "/company/api/v1/sector/list").permitAll() 
 //		   .antMatchers(HttpMethod.GET, "/course/api/v1/mentor/list").permitAll()
 //		   .antMatchers(HttpMethod.GET, "/account/api/v1/query").permitAll()
+		   .antMatchers(HttpMethod.GET, "/company/api/v1/exchange/list").hasRole("user")
+		   .antMatchers(HttpMethod.GET, "/company/api/v1/exchange/query").hasRole("user")
 		   .antMatchers("/company/api/v1/**").hasRole("admin")
 		   .antMatchers(HttpMethod.POST, "/stock/api/v1/file/**").hasRole("admin")
 		   .antMatchers("/stock/api/v1/stock/**").hasRole("user")
