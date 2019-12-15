@@ -1,0 +1,167 @@
+spring:
+  profiles:
+    active: local
+---
+spring:
+  profiles: local
+  application:
+    name: stocksba-gateway
+server:
+  port: 9000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:10001/eureka
+  instance:
+    securePortEnabled: true
+    instance-id: ${spring.application.name}:${server.port}
+    
+# 服务管理配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"        #暴漏的接口，"*"表示所有web监控接口
+        exclude:            #不暴漏的接口
+      base-path: /actuator  #监控根路径
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+# 网关配置
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false # 停用超时设置
+        isolation:
+          thread:
+            timeoutInMilliseconds: 80000 
+    
+swagger.enabled: true
+
+
+apiurl:
+  gatewayurl: http://localhost:9000
+
+ribbon:
+  ReadTimeout: 20000
+  ConnectTimeout: 20000
+
+zuul:
+  ignoredServices: '*'
+  host:
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
+
+  routes:        
+    stocksba-account:
+      path: /account/**
+#        url: http://localhost:9997
+      serviceId: stocksba-account
+      stripPrefix: false
+      sensitiveHeaders:
+    stocksba-auth:
+      path: /auth/**
+#        url: http://localhost:9999
+      serviceId: stocksba-auth
+      stripPrefix: false
+      sensitiveHeaders: Cookie,Set-Cookie # Exclude authorization from sensitive headers
+    stocksba-company:
+      path: /company/**
+#        url: http://localhost:9996
+      serviceId: stocksba-company
+      stripPrefix: false
+    stocksba-stock:
+      path: /stock/**
+#        url: http://localhost:9995
+      serviceId: stocksba-stock
+      stripPrefix: false
+      
+
+
+---
+spring:
+  profiles: k8s
+  application:
+    name: stocksba-gateway
+server:
+  port: 9000
+  
+    
+eureka:
+  client:
+    service-url:
+      defaultZone: http://stocksba-registry:10001/eureka
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+    
+# 服务管理配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"        #暴漏的接口，"*"表示所有web监控接口
+        exclude:            #不暴漏的接口
+      base-path: /actuator  #监控根路径
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+# 网关配置
+  
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false # 停用超时设置
+        isolation:
+          thread:
+            timeoutInMilliseconds: 80000
+    
+swagger.enabled: true
+
+apiurl:
+  gatewayurl: http://stocksba-gateway:9000
+
+ribbon:
+  ReadTimeout: 20000
+  ConnectTimeout: 20000
+
+zuul:
+  ignoredServices: '*'
+  host:
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
+
+  routes:
+    sba-account:
+      path: /account/**
+#        url: http://sba-account:9997
+      serviceId: stocksba-account
+      stripPrefix: false
+      sensitiveHeaders:
+    sba-auth:
+      path: /auth/**
+#        url: http://sba-auth:9999
+      serviceId: stocksba-auth
+      stripPrefix: false
+      sensitiveHeaders: Cookie,Set-Cookie # Exclude authorization from sensitive headers 
+    stocksba-company:
+      path: /company/**
+#        url: http://localhost:9996
+      serviceId: stocksba-company
+      stripPrefix: false
+    stocksba-stock:
+      path: /stock/**
+#        url: http://localhost:9995
+      serviceId: stocksba-stock
+      stripPrefix: false
+       
+        
