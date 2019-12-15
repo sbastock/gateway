@@ -48,19 +48,11 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 		   .antMatchers(HttpMethod.POST, "/account/api/v1/add").permitAll()
 		   .antMatchers(HttpMethod.GET, "/company/api/v1/company/list").permitAll() 
 		   .antMatchers(HttpMethod.GET, "/company/api/v1/sector/list").permitAll() 
-//		   .antMatchers(HttpMethod.GET, "/course/api/v1/mentor/list").permitAll()
-//		   .antMatchers(HttpMethod.GET, "/account/api/v1/query").permitAll()
 		   .antMatchers(HttpMethod.GET, "/company/api/v1/exchange/list").hasRole("user")
 		   .antMatchers(HttpMethod.GET, "/company/api/v1/exchange/query").hasRole("user")
 		   .antMatchers("/company/api/v1/**").hasRole("admin")
 		   .antMatchers(HttpMethod.POST, "/stock/api/v1/file/**").hasRole("admin")
 		   .antMatchers("/stock/api/v1/stock/**").hasRole("user")
-//		   .antMatchers(HttpMethod.POST, "/course/api/v1/company/**").hasRole("admin")
-//		   .antMatchers(HttpMethod.GET, "/course/api/v1/mentor/searchcourse").hasRole("user")
-//		   .antMatchers(HttpMethod.POST, "/course/api/v1/addrate").hasRole("user")
-		   // must be an admin if trying to access admin area (authentication is also required here)
-//		   .antMatchers("/account/**", "/course/**", "/mentor/**").hasAnyRole("admin","mentor")
-//		   .antMatchers(HttpMethod.POST, "/course/**", "/account/**").hasAnyRole("admin","mentor")
 		   // Any other request must be authenticated
 		   .anyRequest().authenticated(); 
 	}
